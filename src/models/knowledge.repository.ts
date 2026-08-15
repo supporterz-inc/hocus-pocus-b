@@ -40,13 +40,12 @@ export const KnowledgeRepository = {
   },
 
   async getByAuthorId(authorId: string): Promise<Knowledge[]> {
-    const files = await Array.fromAsync(glob(`${STORAGE_DIR}/**/*.json`));
-    const knowledges = await Promise.all(files.map((file) => readKnowledge(file)));
+    const knowledges = await getAll();
 
     return knowledges.filter((knowledge) => knowledge.authorId === authorId);
   },
 
-  async getAll() {
+  async getAll_api() { // 全てのナレッジを取得
     return await getAll();
   },
 // ファイルを追加・更新
