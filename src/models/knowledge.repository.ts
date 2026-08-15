@@ -17,9 +17,7 @@ async function readKnowledge(file: string): Promise<Knowledge> {
 async function getAll(): Promise<Knowledge[]> {
   const files = await Array.fromAsync(glob(`${STORAGE_DIR}/**/*.json`)); //ファイルを持ってきてる．文字の配列
 
-  const knowledges = await Promise.all(
-    files.map((file) => readKnowledge(file)),
-  );
+  const knowledges = await Promise.all(files.map((file) => readKnowledge(file)));
 
   return knowledges;
 }
@@ -45,17 +43,18 @@ export const KnowledgeRepository = {
     return knowledges.filter((knowledge) => knowledge.authorId === authorId);
   },
 
-  async getAll_api() { // 全てのナレッジを取得
+  async getAll_api() {
+    // 全てのナレッジを取得
     return await getAll();
   },
-/**
- * @description ナレッジを保存する関数
- * @returns Promise<void>
- * @function 
- * @param knowledge 
- */
+  /**
+   * @description ナレッジを保存する関数
+   * @returns Promise<void>
+   * @function
+   * @param knowledge
+   */
   async upsert(knowledge: Knowledge): Promise<void> {
-    await mkdir(STORAGE_DIR, { recursive: true });//ディレクトリを作ってる
+    await mkdir(STORAGE_DIR, { recursive: true }); //ディレクトリを作ってる
 
     const file = toFilePath(knowledge.knowledgeId); // ファイルパスを生成
     const content = JSON.stringify(knowledge, null, 2); // ナレッジをJSON 文字列に変換
