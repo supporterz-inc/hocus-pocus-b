@@ -48,7 +48,12 @@ export const KnowledgeRepository = {
   async getAll_api() { // 全てのナレッジを取得
     return await getAll();
   },
-// ファイルを追加・更新
+/**
+ * @description ナレッジを保存する関数
+ * @returns Promise<void>
+ * @function 
+ * @param knowledge 
+ */
   async upsert(knowledge: Knowledge): Promise<void> {
     await mkdir(STORAGE_DIR, { recursive: true });//ディレクトリを作ってる
 
