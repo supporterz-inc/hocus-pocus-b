@@ -1,27 +1,77 @@
-import { glob, readFile } from 'node:fs/promises';
+import { glob, mkdir, readFile, unlink, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
 import type { Knowledge } from './knowledge.model.js';
 
-async function getAll(): Promise<Knowledge[]> {
-  const files = await Array.fromAsync(glob('./storage/**/*.json'));
+const STORAGE_DIR = './storage/knowledges';
 
-  const knowledges = await Promise.all(files.map((file) => readFile(file, 'utf-8').then(JSON.parse)));
+function toFilePath(knowledgeId: string): string {
+  return join(STORAGE_DIR, `${knowledgeId}.json`);
+}
+
+async function readKnowledge(file: string): Promise<Knowledge> {
+  const raw = await readFile(file, 'utf-8');
+  return JSON.parse(raw) as Knowledge;
+}
+
+async function getAll(): Promise<Knowledge[]> {
+  const files = await Array.fromAsync(glob(`${STORAGE_DIR}/**/*.json`)); //ファイルを持ってきてる．文字の配列
+
+  const knowledges = await Promise.all(files.map((file) => readKnowledge(file)));
 
   return knowledges;
 }
 
 export const KnowledgeRepository = {
-  // biome-ignore lint/suspicious/noExplicitAny: TODO: (学生向け) 実装する
-  getByKnowledgeId: (_: string): Promise<Knowledge> => undefined as any,
+  async getByKnowledgeId(knowledgeId: string): Promise<Knowledge> {
+    const file = toFilePath(knowledgeId);
 
-  // biome-ignore lint/suspicious/noExplicitAny: TODO: (学生向け) 実装する
-  getByAuthorId: (_: string): Promise<Knowledge[]> => undefined as any,
+    try {
+      return await readKnowledge(file);
+    } catch (error) {
+      const err = error as NodeJS.ErrnoException;
+      if (err.code === 'ENOENT') {
+        throw new Error(`Knowledge not found: ${knowledgeId}`);
+      }
+      throw error;
+    }
+  },
 
-  getAll,
+  async getByAuthorId(authorId: string): Promise<Knowledge[]> {
+    const knowledges = await getAll();
 
-  // biome-ignore lint/suspicious/noExplicitAny: TODO: (学生向け) 実装する
-  upsert: (_: Knowledge): Promise<void> => undefined as any,
+    return knowledges.filter((knowledge) => knowledge.authorId === authorId);
+  },
 
-  // biome-ignore lint/suspicious/noExplicitAny: TODO: (学生向け) 実装する
-  deleteByKnowledgeId: (_: string): Promise<void> => undefined as any,
+  async getAll_api() {
+    // 全てのナレッジを取得
+    return await getAll();
+  },
+  /**
+   * @description ナレッジを保存する関数
+   * @returns Promise<void>
+   * @function
+   * @param knowledge
+   */
+  async upsert(knowledge: Knowledge): Promise<void> {
+    await mkdir(STORAGE_DIR, { recursive: true }); //ディレクトリを作ってる
+
+    const file = toFilePath(knowledge.knowledgeId); // ファイルパスを生成
+    const content = JSON.stringify(knowledge, null, 2); // ナレッジをJSON 文字列に変換
+
+    await writeFile(file, content, 'utf-8'); // ファイルに書き込み
+  },
+
+  async deleteByKnowledgeId(knowledgeId: string): Promise<void> {
+    const file = toFilePath(knowledgeId);
+
+    try {
+      await unlink(file);
+    } catch (error) {
+      const err = error as NodeJS.ErrnoException;
+      if (err.code !== 'ENOENT') {
+        throw error;
+      }
+    }
+  },
 };
