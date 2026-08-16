@@ -4,6 +4,7 @@ import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { trimTrailingSlash } from 'hono/trailing-slash';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
+import { ErrorPage } from './features/ErrorPage.js';
 import { router, type Variables } from './router.js';
 
 const app = new Hono<{ Variables: Variables }>();
@@ -35,6 +36,14 @@ app.use('*', async (ctx, next) => {
   }
 
   await next();
+});
+
+app.onError((error, ctx) => {
+  const status = error instanceof HTTPException ? error.getResponse().status : 500;
+  const message =
+    error instanceof HTTPException ? error.message : 'サーバーで問題が発生しました。もう一度お試しください。';
+
+  return ctx.html(ErrorPage({ message, status }), status as 400 | 401 | 403 | 404 | 500);
 });
 
 app.route('/', router);
