@@ -3,6 +3,7 @@ import {
   createKnowledgeController,
   showCreateKnowledgeFormController,
 } from './controllers/create-knowledge.controller.js';
+import { deleteKnowledgeController } from './controllers/delete-knowledge.controller.js';
 import { getAllKnowledgesController } from './controllers/get-all-knowledges.controller.js';
 
 export interface Variables {
@@ -29,4 +30,22 @@ router.post('/knowledges', async (ctx) => {
   const content = body['content'];
 
   return ctx.html(await createKnowledgeController(userId, content as string));
+});
+
+router.post('/knowledges/:knowledgeId/delete', async (ctx) => {
+  const userId = ctx.get('userId');
+  const knowledgeId = ctx.req.param('knowledgeId');
+
+  try {
+    const result = await deleteKnowledgeController(userId, knowledgeId);
+
+    if (result === null) {
+      return ctx.redirect('/');
+    }
+
+    return ctx.html(result);
+  } catch (error) {
+    console.error('Error in POST /knowledges/:knowledgeId/delete:', error);
+    return ctx.text('Internal Server Error', 500);
+  }
 });
