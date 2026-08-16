@@ -9,19 +9,33 @@ interface Props {
 export function KnowledgeListFeature({ userId, knowledges }: Props) {
   return (
     <Layout title="ナレッジ一覧">
-      <p>
-        こんにちは <span class="text-blue-100 font-bold">{userId}</span> さん
-      </p>
+      <div class="mb-6 flex items-center justify-between">
+        <p>
+          こんにちは <span class="text-blue-100 font-bold">{userId}</span> さん
+        </p>
+        <a class="bg-blue-500 px-4 py-2 text-white hover:bg-blue-700" href="/knowledges/new">
+          新規作成
+        </a>
+      </div>
       {knowledges.length ? (
-        <ul>
+        <ul class="space-y-4">
           {knowledges.map((knowledge) => (
-            <li key={knowledge.knowledgeId}>{knowledge.knowledgeId}</li>
+            <li class="border border-gray-200 bg-white p-4 shadow-sm" key={knowledge.knowledgeId}>
+              <div class="mb-3 flex items-center justify-between gap-4">
+                <p class="text-sm text-gray-500">投稿者: {knowledge.authorId}</p>
+                <a
+                  class="shrink-0 border border-blue-500 px-3 py-1 text-sm text-blue-600 hover:bg-blue-50"
+                  href={`/knowledges/${knowledge.knowledgeId}/edit`}
+                >
+                  編集
+                </a>
+              </div>
+              <p class="whitespace-pre-wrap break-words leading-7">{knowledge.content}</p>
+            </li>
           ))}
         </ul>
       ) : (
-        <ul>
-          <li>投稿済みのナレッジは 0 件です</li>
-        </ul>
+        <p class="border border-dashed border-gray-300 p-6 text-center text-gray-500">投稿済みのナレッジは 0 件です</p>
       )}
     </Layout>
   );
