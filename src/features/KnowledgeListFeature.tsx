@@ -22,13 +22,24 @@ export function KnowledgeListFeature({ userId, knowledges }: Props) {
           {knowledges.map((knowledge) => (
             <li class="border border-gray-200 bg-white p-4 shadow-sm" key={knowledge.knowledgeId}>
               <div class="mb-3 flex items-center justify-between gap-4">
-                <p class="text-sm text-gray-500">投稿者: {knowledge.authorId}</p>
-                <a
-                  class="shrink-0 border border-blue-500 px-3 py-1 text-sm text-blue-600 hover:bg-blue-50"
-                  href={`/knowledges/${knowledge.knowledgeId}/edit`}
-                >
-                  編集
-                </a>
+                <div>
+                  <p class="text-sm text-gray-500">投稿者: {knowledge.authorId}</p>
+                  <p class="mt-1 text-xs text-gray-400">ID: {knowledge.knowledgeId}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <a
+                    class="shrink-0 border border-blue-500 px-3 py-1 text-sm text-blue-600 hover:bg-blue-50"
+                    href={`/knowledges/${knowledge.knowledgeId}`}
+                  >
+                    詳細を見る
+                  </a>
+                  <a
+                    class="shrink-0 border border-gray-400 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                    href={`/knowledges/${knowledge.knowledgeId}/edit`}
+                  >
+                    編集
+                  </a>
+                </div>
               </div>
               <p class="whitespace-pre-wrap break-words leading-7">{knowledge.content}</p>
             </li>

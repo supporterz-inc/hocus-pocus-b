@@ -1,0 +1,43 @@
+Hocus Pocus 変更まとめ（詳細表示関連）
+
+作成日: 2026-08-16
+
+このファイルは、ブランチ前のメインに入っている編集内容を、ファイル名と変更点の一覧としてまとめたものです。
+
+1. src/router.ts
+   - 詳細ページ用のルートを追加
+   - URL から knowledgeId を取り出す処理を追加
+   - 詳細表示のコントローラーを呼ぶように変更
+   - 既存の一覧表示と作成処理はそのまま維持
+
+2. src/controllers/get-knowledge-detail.controller.tsx
+   - 詳細ページ用コントローラーを新規作成
+   - KnowledgeRepository.getByKnowledgeId(knowledgeId) を呼ぶ
+   - 取得したナレッジを詳細画面へ渡す
+   - 該当データがない場合は not found の表示へ切り替える処理を追加
+
+3. src/features/KnowledgeDetailFeature.tsx
+   - ナレッジ詳細画面のコンポーネントを新規作成
+   - Layout でページ枠組みを統一
+   - 作成者、作成日時、更新日時、本文を表示
+   - 一覧へ戻るリンクを追加
+
+4. src/features/KnowledgeNotFoundFeature.tsx
+   - 存在しないナレッジIDに対する表示画面を新規作成
+   - 「ナレッジが見つかりません」メッセージを表示
+   - 一覧へ戻る導線を用意
+
+5. src/features/KnowledgeListFeature.tsx
+   - 一覧ページの各ナレッジをリンク化
+   - href={`/knowledges/${knowledge.knowledgeId}`} で詳細ページへの遷移を追加
+   - 一覧から詳細画面へ進めるようにした
+
+6. TODO_DETAIL_PAGE.md
+   - 詳細表示の実装TODOを整理
+   - 要件定義に合わせて、対象範囲と実装順を明記
+   - 更新・削除などの対象外を明確にした
+
+補足:
+- この時点では、詳細ページの表示そのものは実装済みの状態です。
+- ただし、更新・削除、認証、投稿者判定、Markdown整形などは未実装のままです。
+- 変更範囲は詳細表示に絞られており、他の要件には触れていません。
