@@ -77,6 +77,8 @@ function renderMarkdownContent(content: string) {
 }
 
 export function KnowledgeDetailFeature({ userId, knowledge }: PropsWithChildren<Props>) {
+  const canDelete = userId === knowledge.authorId;
+
   return (
     <Layout title="ナレッジ詳細">
       <div class="p-4">
@@ -88,9 +90,23 @@ export function KnowledgeDetailFeature({ userId, knowledge }: PropsWithChildren<
         <p class="mt-2">作成日時: {new Date(knowledge.createdAt * 1000).toLocaleString('ja-JP')}</p>
         <p class="mt-2">更新日時: {new Date(knowledge.updatedAt * 1000).toLocaleString('ja-JP')}</p>
         <div class="mt-4 rounded border border-gray-300 bg-gray-50 p-3">{renderMarkdownContent(knowledge.content)}</div>
-        <a class="mt-4 block" href="/">
-          ← 一覧に戻る
-        </a>
+
+        <div class="mt-4 flex items-center gap-3">
+          <a class="block" href="/">
+            ← 一覧に戻る
+          </a>
+          {canDelete ? (
+            <form action={`/knowledges/${knowledge.knowledgeId}/delete`} method="post">
+              <button
+                class="bg-red-500 px-3 py-2 text-sm text-white hover:bg-red-700"
+                onclick="return confirm('このナレッジを削除しますか？')"
+                type="submit"
+              >
+                削除する
+              </button>
+            </form>
+          ) : null}
+        </div>
       </div>
     </Layout>
   );
