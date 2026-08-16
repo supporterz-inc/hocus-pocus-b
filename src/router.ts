@@ -10,7 +10,6 @@ import {
   showUpdateKnowledgeFormController,
   updateKnowledgeController,
 } from './controllers/update_KnowledgeController.js';
-import { getKnowledgeDetailController } from './controllers/get-knowledge-detail.controller.js';
 
 export interface Variables {
   userId: string;
