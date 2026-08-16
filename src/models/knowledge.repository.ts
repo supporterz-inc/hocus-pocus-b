@@ -44,12 +44,10 @@ export const KnowledgeRepository = {
   },
 
   async getAll(): Promise<Knowledge[]> {
-    return await getAll();
-  },
+    const files = await Array.fromAsync(glob(`${STORAGE_DIR}/**/*.json`));
+    const knowledges = await Promise.all(files.map((file) => readKnowledge(file)));
 
-  async getAll_api() {
-    // 全てのナレッジを取得
-    return await this.getAll();
+    return knowledges;
   },
   /**
    * @description ナレッジを保存する関数

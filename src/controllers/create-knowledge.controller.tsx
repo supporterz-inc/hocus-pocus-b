@@ -1,5 +1,4 @@
 import { KnowledgeCreateFeature } from '../features/KnowledgeCreateFeature.js';
-import { KnowledgeListFeature } from '../features/KnowledgeListFeature.js';
 import { Knowledge } from '../models/knowledge.model.js';
 import { KnowledgeRepository } from '../models/knowledge.repository.js';
 
@@ -15,9 +14,8 @@ export async function createKnowledgeController(userId: string, content: string)
   try {
     const knowledge = Knowledge.create(content.trim(), userId);
     await KnowledgeRepository.upsert(knowledge);
-    const knowledges = await KnowledgeRepository.getAll_api();
 
-    return <KnowledgeListFeature knowledges={knowledges} userId={userId} />;
+    return null;
   } catch (error) {
     console.error(error);
 

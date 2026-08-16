@@ -29,7 +29,18 @@ router.post('/knowledges', async (ctx) => {
   const body = await ctx.req.parseBody();
   const content = body['content'];
 
-  return ctx.html(await createKnowledgeController(userId, content as string));
+  try {
+    const result = await createKnowledgeController(userId, content as string);
+
+    if (result === null) {
+      return ctx.redirect('/', 303);
+    }
+
+    return ctx.html(result);
+  } catch (error) {
+    console.error('Error in POST /knowledges:', error);
+    return ctx.text('Internal Server Error', 500);
+  }
 });
 
 router.post('/knowledges/:knowledgeId/delete', async (ctx) => {
@@ -40,7 +51,7 @@ router.post('/knowledges/:knowledgeId/delete', async (ctx) => {
     const result = await deleteKnowledgeController(userId, knowledgeId);
 
     if (result === null) {
-      return ctx.redirect('/');
+      return ctx.redirect('/', 303);
     }
 
     return ctx.html(result);
