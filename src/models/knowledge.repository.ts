@@ -43,9 +43,11 @@ export const KnowledgeRepository = {
     return knowledges.filter((knowledge) => knowledge.authorId === authorId);
   },
 
-  async getAll_api() {
-    // 全てのナレッジを取得
-    return await getAll();
+  async getAll(): Promise<Knowledge[]> {
+    const files = await Array.fromAsync(glob(`${STORAGE_DIR}/**/*.json`));
+    const knowledges = await Promise.all(files.map((file) => readKnowledge(file)));
+
+    return knowledges;
   },
   /**
    * @description ナレッジを保存する関数

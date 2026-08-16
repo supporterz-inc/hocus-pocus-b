@@ -36,7 +36,7 @@ export async function updateKnowledgeController(userId: string, knowledgeId: str
   }
   const updatedKnowledge = Knowledge.update(knowledge, content.trim());
   await KnowledgeRepository.upsert(updatedKnowledge);
-  const knowledges = await KnowledgeRepository.getAll_api();
+  const knowledges = await KnowledgeRepository.getAll();
 
   return <KnowledgeListFeature knowledges={knowledges} userId={userId} />;
 }
