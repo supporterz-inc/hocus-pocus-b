@@ -7,7 +7,7 @@ import { getAllKnowledgesController } from './controllers/get-all-knowledges.con
 import {
   showUpdateKnowledgeFormController,
   updateKnowledgeController,
-} from './controllers/updateKnowledgeController.js';
+} from './controllers/update_KnowledgeController.js';
 
 export interface Variables {
   userId: string;

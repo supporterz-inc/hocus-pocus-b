@@ -18,7 +18,6 @@ async function getKnowledgeOrThrow(knowledgeId: string) {
 
 export async function showUpdateKnowledgeFormController(userId: string, knowledgeId: string) {
   const knowledge = await getKnowledgeOrThrow(knowledgeId);
-
   if (knowledge.authorId !== userId) {
     throw new HTTPException(403, { message: 'このナレッジを編集する権限がありません。' });
   }
@@ -28,7 +27,6 @@ export async function showUpdateKnowledgeFormController(userId: string, knowledg
 
 export async function updateKnowledgeController(userId: string, knowledgeId: string, content: string) {
   const knowledge = await getKnowledgeOrThrow(knowledgeId);
-
   if (knowledge.authorId !== userId) {
     throw new HTTPException(403, { message: 'このナレッジを編集する権限がありません。' });
   }
@@ -36,7 +34,6 @@ export async function updateKnowledgeController(userId: string, knowledgeId: str
   if (!content || content.trim().length === 0) {
     return <KnowledgeEditFeature error="ナレッジの内容を入力してください" knowledge={knowledge} userId={userId} />;
   }
-
   const updatedKnowledge = Knowledge.update(knowledge, content.trim());
   await KnowledgeRepository.upsert(updatedKnowledge);
   const knowledges = await KnowledgeRepository.getAll_api();
