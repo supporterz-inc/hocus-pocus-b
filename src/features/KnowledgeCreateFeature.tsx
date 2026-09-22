@@ -18,7 +18,9 @@ export function KnowledgeCreateFeature() {
             rows={20}
           />
         </p>
-        <button type="submit">作成する</button>
+        <button class="inline-block rounded bg-blue-600 px-4 py-2 text-white" type="submit">
+          作成する
+        </button>
       </form>
     </Layout>
   );

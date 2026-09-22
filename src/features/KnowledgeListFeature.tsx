@@ -23,6 +23,9 @@ export function KnowledgeListFeature({ userName, knowledges }: Props) {
           <li>投稿済みのナレッジは 0 件です</li>
         </ul>
       )}
+      <button class="inline-block rounded bg-blue-600 px-4 py-2 text-white" type="submit">
+        <a href="/knowledges/new">ナレッジを新規作成する</a>
+      </button>
     </Layout>
   );
 }

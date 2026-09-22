@@ -27,17 +27,19 @@ router.get('/', (ctx) => {
   // MEMO: Controller は Context を直接受け取らず、必要な情報のみを引数に受け取る
   return ctx.html(getAllKnowledgesController(userId));
 });
+
 router.get('/knowledges/new', (ctx) => {
   return ctx.html(KnowledgeCreateFeature());
 });
 router.post('/knowledges', async (ctx) => {
   const body = await ctx.req.parseBody();
   const content = body['content'];
+  const userId = ctx.get('userId');
   if (typeof content !== 'string') {
     return ctx.text('本文を入力してください', 400);
   }
   const knowledge = Knowledge.create(content, ctx.get('userId'));
 
   upsertKnowledgesController(knowledge);
-  return ctx.json(knowledge);
+  return ctx.html(getAllKnowledgesController(userId));
 });
