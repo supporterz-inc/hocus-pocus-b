@@ -1,4 +1,4 @@
-import { glob, readFile, writeFile } from 'node:fs/promises';
+import { glob, readFile, unlink, writeFile } from 'node:fs/promises';
 
 import type { Knowledge } from './knowledge.model.js';
 
@@ -15,6 +15,11 @@ async function upsert(knowledge: Knowledge): Promise<void> {
   await writeFile(create_file, data, 'utf8');
 }
 
+async function deleteByKnowledgeId(knowledgeId: string): Promise<void> {
+  const delete_file = `./storage/${knowledgeId}.json`;
+  await unlink(delete_file);
+}
+
 export const KnowledgeRepository = {
   // biome-ignore lint/suspicious/noExplicitAny: TODO: (学生向け) 実装する
   getByKnowledgeId: (_: string): Promise<Knowledge> => undefined as any,
@@ -26,6 +31,5 @@ export const KnowledgeRepository = {
 
   upsert,
 
-  // biome-ignore lint/suspicious/noExplicitAny: TODO: (学生向け) 実装する
-  deleteByKnowledgeId: (_: string): Promise<void> => undefined as any,
+  deleteByKnowledgeId,
 };

@@ -15,7 +15,14 @@ export function KnowledgeListFeature({ userName, knowledges }: Props) {
       {knowledges.length ? (
         <ul>
           {knowledges.map((knowledge) => (
-            <li key={knowledge.knowledgeId}>{knowledge.knowledgeId}</li>
+            <li key={knowledge.knowledgeId}>
+              {knowledge.knowledgeId}
+              <form action={`/knowledges/${knowledge.knowledgeId}/delete`}>
+                <button class="inline-block rounded bg-blue-600 px-4 py-2 text-white" type="submit">
+                  削除
+                </button>
+              </form>
+            </li>
           ))}
         </ul>
       ) : (
