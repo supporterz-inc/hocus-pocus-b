@@ -48,7 +48,10 @@ router.post('/knowledges', async (ctx) => {
 //削除処理
 router.post(`/knowledges/:knowledgeId/delete`, async (ctx) => {
   const knowledgeId = ctx.req.param('knowledgeId');
-  await deleteKnowledgesController(knowledgeId);
   const userId = ctx.get('userId');
+  const deleted = await deleteKnowledgesController(knowledgeId, userId);
+  if (!deleted) {
+    console.log('Knowledge not found or unauthorized');
+  }
   return ctx.html(getAllKnowledgesController(userId));
 });
