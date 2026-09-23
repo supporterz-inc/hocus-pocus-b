@@ -26,7 +26,7 @@ router.get('/', (ctx) => {
   console.log(`Signed-in : ${userName} (${userId})`);
 
   // MEMO: Controller は Context を直接受け取らず、必要な情報のみを引数に受け取る
-  return ctx.html(getAllKnowledgesController(userId));
+  return ctx.html(getAllKnowledgesController(userName));
 });
 // 新規作成画面
 router.get('/knowledges/new', (ctx) => {
@@ -46,7 +46,7 @@ router.post('/knowledges', async (ctx) => {
   return ctx.html(getAllKnowledgesController(userId));
 });
 //削除処理
-router.get(`/knowledges/:knowledgeId/delete`, async (ctx) => {
+router.post(`/knowledges/:knowledgeId/delete`, async (ctx) => {
   const knowledgeId = ctx.req.param('knowledgeId');
   await deleteKnowledgesController(knowledgeId);
   const userId = ctx.get('userId');

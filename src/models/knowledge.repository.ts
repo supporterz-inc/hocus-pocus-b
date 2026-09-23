@@ -15,9 +15,20 @@ async function upsert(knowledge: Knowledge): Promise<void> {
   await writeFile(create_file, data, 'utf8');
 }
 
+const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function isKnowledgeId(value: string): boolean {
+  return uuidPattern.test(value);
+}
+
 async function deleteByKnowledgeId(knowledgeId: string): Promise<void> {
-  const delete_file = `./storage/${knowledgeId}.json`;
-  await unlink(delete_file);
+  console.log(`Deleting knowledge with knowledgeId: ${knowledgeId}`);
+  if (!isKnowledgeId(knowledgeId)) {
+    throw new Error('Invalid knowledgeId');
+  }
+
+  const filePath = `./storage/${knowledgeId}.json`;
+  await unlink(filePath);
 }
 
 export const KnowledgeRepository = {
